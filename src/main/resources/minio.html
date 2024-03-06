@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.14/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/spark-md5/3.0.2/spark-md5.min.js"></script>
+</head>
+<body>
+<div id="app">
+
+    <h1>{{title}}</h1>
+    <br>
+
+    <form @submit.prevent="getPolicyForm">
+
+        <label>
+            桶名
+            <input type="text" v-model="policyParams.bucket">
+        </label>
+        <br>
+        <label>
+            文件名
+            <input type="text" v-model="policyParams.filename">
+        </label>
+        <br>
+        <button type="submit">获取上传凭证</button>
+        <br>
+        <div v-for="(val, key) in policy" :key="key">{{ key }}: <span>{{ val }}</span></div>
+    </form>
+
+    <br>
+
+    <form @submit.prevent="uploadFileForm" v-show="policy != null">
+        <label>
+            文件
+            <input type="file" @change="fileChange">
+        </label>
+        <br>
+        <br>
+        <button type="submit" v-show="file != null">上传文件</button>
+
+    </form>
+
+    ---
+    <br>
+
+
+    <div v-show="file != null">
+        <button @click="sliceEvent">测试文件分片上传</button>
+        |
+        <button @click="sliceComposeEvent">分片文件合并</button>
+    </div>
+
+
+    <br>
+    <br>
+    <br>
+    <p>{{uploadResult}}</p>
+    <ul>
+        <!--        <li v-for="item in sliceUploadResult">{{ item }}</li>-->
+        <li v-for="(item, index) in sliceUploadResult" :key="index">{{ item }}</li>
+
+    </ul>
+    <br>
+
+</div>
+
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data() {
+            return {
+                title: "Minio测试"
+                // 请求凭证参数
+                , policyParams: {
+                    bucket: "mybucket"
+                    , filename: null
+                }
+                // 请求到的凭证
+                , policy: null
+                // 待上传文件
+                , file: null
+
+                // 上传文件参数
+                , uploadParams: {
+                    file: null
+                }
+
+                // 分片上传参数
+                , sliceParams: {
+                    bucket: ""
+                    , filename: ""
+                    , file: null
+                }
+                , slicePolicys: []
+                , sliceCount: 0
+
+                // 上传结果回调
+                , uploadResult: null
+                // 分片上传结果回调
+                , sliceUploadResult: null
+            };
+        },
+        methods: {
+            getPolicyForm() {
+                //this.policyParams.bucket = "mybucket"
+                //this.policyParams.filename = "62a9415b6eedd2211e9c1778.jpeg"
+                this.requestPolicy(this.policyParams)
+            },
+            requestPolicy(params) {
+                return new Promise(((resolve, reject) => {
+                    $.ajax({
+                        type: "POST",
+                        url: "api/minio/presign",
+                        contentType: "application/json",
+                        data: JSON.stringify(params),
+                        // async: false,
+                        success: function (result) {
+                            console.log(result)
+                            vm.policy = result;
+                            resolve(result)
+                        },
+                        error: function (e) {
+                            reject()
+                        }
+                    });
+                }))
+
+            },
+            fileChange(event) {
+                const file = event.target.files[0]
+                this.file = file
+            },
+            uploadFileForm() {
+                this.uploadFile(this.file, this.policy)
+            },
+
+            uploadFile(file, policy) {
+                console.log("准备上传文件：")
+                console.log("file：" + file)
+                console.log("policy：" + policy)
+				console.log("policy[bucket]：" + policy['bucket'])
+                var formData = new FormData()
+               
+                formData.append('key', policy['key'])
+                formData.append('x-amz-algorithm', policy['x-amz-algorithm'])
+                formData.append('x-amz-credential', policy['x-amz-credential'])
+                formData.append('x-amz-signature', policy['x-amz-signature'])
+                formData.append('x-amz-date', policy['x-amz-date'])
+                formData.append('policy', policy['policy'])
+				formData.append('file', file)
+
+                return new Promise(((resolve, reject) => {
+                    $.ajax({
+                        method: 'POST',
+                        url: 'http://10.11.0.136:9000/' + policy['bucket'],
+                        data: formData,
+                        dataType: 'json',
+                        contentType: false, // 必须设置为 false，不设置 contentType，让浏览器自动设置
+                        processData: false, // 必须设置为 false，不对 FormData 进行序列化处理
+                        // async: false, // 设置同步，方便等下做分片上传
+                        xhr: function xhr() {
+                            //获取原生的xhr对象
+                            var xhr = $.ajaxSettings.xhr();
+                            if (xhr.upload) {
+                                //添加 progress 事件监听
+                                xhr.upload.addEventListener('progress', function (e) {
+                                    //e.loaded 已上传文件字节数
+                                    //e.total 文件总字节数
+                                    var percentage = parseInt(e.loaded / e.total * 100)
+                                    vm.uploadResult = percentage + "%" + "：" + policy['key']
+                                }, false);
+                            }
+                            return xhr;
+                        },
+                        success: function (result) {
+                            vm.uploadResult = '文件上传成功：' + policy['key']
+                            resolve(result)
+                        },
+                        error: function (e) {
+                            reject()
+                        }
+                    })
+                }))
+            },
+            sliceEvent() {
+                // 获取文件
+                var file = this.file
+                // 设置分片大小：5MB
+                var chunkSize = 20 * 1024 * 1024
+                // 计算总共有多少个分片
+                var totalChunk = Math.ceil(file.size / chunkSize)
+                // 数组存放所有分片
+                var chunks = []
+                // 遍历所有分片
+                for (var i = 0; i < totalChunk; i++) {
+                    // 利用slice获取分片
+                    var start = i * chunkSize
+                    var end = Math.min(file.size, start + chunkSize)
+                    var blob = file.slice(start, end)
+                    // 添加分片到数组
+                    chunks.push(blob)
+                }
+
+                console.log(totalChunk)
+
+                this.sliceUploadResult = Array(totalChunk).fill(0)
+
+                for (let i = 0; i < chunks.length; i++) {
+                    var file = chunks[i];
+                    this.calculateMD5(file)
+                        .then((md5) => {
+                            console.log(md5);  // 输出计算出的 MD5 值
+                        })
+                        .catch((error) => {
+                            console.error(error);  // 处理错误
+                        });
+                }
+
+
+                //return
+
+                // 创建序号
+                var index = 0;
+                // 循环上传分片
+                while (index < totalChunk) {
+                    console.log('------------------------------')
+                    params = {
+                        "bucket": "mybucket",
+                        "filename": index + "2024.mp4"
+                    }
+                    var policyPromise = this.requestPolicy(params);
+                    (function (index) {
+                        var file = chunks[index]
+                        policyPromise.then(function (result) {
+                            var filename = result['key']
+                            console.log('准备上传文件：', filename, '，序号为：', index)
+                            vm.uploadFile(file, result).then(function (result) {
+                                console.log('上传完成：' + filename)
+                                vm.sliceUploadResult[index] = ('分片文件上传成功：' + filename)
+                            })
+                        })
+                    })(index)
+
+                    index++
+                }
+            },
+            sliceComposeEvent() {
+                var parmas = {}
+
+                $.ajax({
+                    method: 'POST',
+                    url: 'http://localhost:8888/compose',
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false, // 必须设置为 false，不设置 contentType，让浏览器自动设置
+                    processData: false, // 必须设置为 false，不对 FormData 进行序列化处理
+                    // async: false, // 设置同步，方便等下做分片上传
+                    xhr: function xhr() {
+                        //获取原生的xhr对象
+                        var xhr = $.ajaxSettings.xhr();
+                        if (xhr.upload) {
+                            //添加 progress 事件监听
+                            xhr.upload.addEventListener('progress', function (e) {
+                                //e.loaded 已上传文件字节数
+                                //e.total 文件总字节数
+                                var percentage = parseInt(e.loaded / e.total * 100)
+                                vm.uploadResult = percentage + "%" + "：" + policy['key']
+                            }, false);
+                        }
+                        return xhr;
+                    },
+                    success: function (result) {
+                        vm.uploadResult = '文件上传成功：' + policy['key']
+                        resolve(result)
+                    },
+                    error: function (e) {
+                        reject()
+                    }
+                })
+            },
+            calculateMD5(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+
+                    // 读取文件内容
+                    reader.readAsArrayBuffer(file);
+
+                    reader.onload = () => {
+                        const spark = new SparkMD5.ArrayBuffer();
+                        spark.append(reader.result);  // 将文件内容添加到 MD5 计算器中
+                        const md5 = spark.end();  // 计算 MD5 值
+
+                        resolve(md5);
+                    };
+
+                    reader.onerror = (error) => {
+                        reject(error);
+                    };
+                });
+            }
+        },
+        mounted() {
+        },
+        created() {
+        },
+    });
+
+</script>
+</body>
+</html>

@@ -1,7 +1,5 @@
 package com.csfrez.tool.service;
 
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -14,13 +12,14 @@ import java.nio.file.StandardCopyOption;
 @Service
 public class OcrService {
 
-    public String recognizeText(File imageFile) throws TesseractException {
-        Tesseract tesseract = new Tesseract();
-
-        // 设定训练文件的位置（如果是标准英文识别，此步可省略）
-        tesseract.setDatapath("E:\\GitCode\\tessdata");
-        tesseract.setLanguage("chi_sim");
-        return tesseract.doOCR(imageFile);
+    public String recognizeText(File imageFile){
+//        Tesseract tesseract = new Tesseract();
+//
+//        // 设定训练文件的位置（如果是标准英文识别，此步可省略）
+//        tesseract.setDatapath("E:\\GitCode\\tessdata");
+//        tesseract.setLanguage("chi_sim");
+//        return tesseract.doOCR(imageFile);
+        return null;
     }
 
     public String recognizeTextFromUrl(String imageUrl) throws Exception {
