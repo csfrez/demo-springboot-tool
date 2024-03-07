@@ -6,10 +6,6 @@ import io.minio.ComposeSource;
 import io.minio.MinioClient;
 import io.minio.PostPolicy;
 import io.minio.errors.MinioException;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -114,8 +110,6 @@ public class MinioController {
 
     @RequestMapping(value = "/upload", method = {RequestMethod.POST})
     public Map<String, String> upload(@RequestBody PresignParam presignParam) {
-
-
 
         return null;
     }
