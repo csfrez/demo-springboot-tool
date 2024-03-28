@@ -92,7 +92,6 @@
             <version>2.0.30</version>
         </dependency>
 
-
         <dependency>
             <groupId>com.groupdocs</groupId>
             <artifactId>groupdocs-conversion</artifactId>
@@ -117,7 +116,6 @@
             <version>8.0.0</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.docx4j</groupId>
             <artifactId>docx4j-export-fo</artifactId>
@@ -134,6 +132,13 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>5.8.26</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.linyuzai/concept-download-spring-boot-starter -->
+        <dependency>
+            <groupId>com.github.linyuzai</groupId>
+            <artifactId>concept-download-spring-boot-starter</artifactId>
+            <version>2.0.0</version>
         </dependency>
 
 
