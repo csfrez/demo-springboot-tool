@@ -12,7 +12,7 @@ public class MyCommandLineRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // 在这里执行初始化操作
         log.info("MyCommandLineRunner应用程序启动后执行初始化操作...");
-        Thread.sleep(1000L);
+        Thread.sleep(100);
         log.info("MyCommandLineRunner应用程序启动后完成初始化操作...");
     }
 }

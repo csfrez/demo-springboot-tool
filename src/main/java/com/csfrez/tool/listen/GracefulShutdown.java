@@ -15,7 +15,7 @@ public class GracefulShutdown implements ApplicationListener<ContextClosedEvent>
         // 可以在这里处理资源释放、完成正在进行的请求等操作
        log.info("GracefulShutdown应用程序正在关闭，执行优雅停机操作...");
         try {
-            Thread.sleep(3000L);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
