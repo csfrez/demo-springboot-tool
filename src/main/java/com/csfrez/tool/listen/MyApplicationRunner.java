@@ -13,7 +13,7 @@ public class MyApplicationRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         // 在这里执行初始化操作
         log.info("MyApplicationRunner应用程序启动后执行初始化操作...");
-        Thread.sleep(2000L);
+        Thread.sleep(100);
         // 在这里执行初始化操作
         log.info("MyApplicationRunner应用程序启动后完成初始化操作...");
     }

@@ -1,38 +1,19 @@
 package com.csfrez.tool.pdf;
 
-import com.groupdocs.conversion.Converter;
-import com.groupdocs.conversion.options.convert.PdfConvertOptions;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.docx4j.Docx4J;
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-
 public class WordToPdfConverter {
 
     public static void main(String[] args) {
         String inputFile = "E:\\tmp\\docx\\1f720f72c6.docx";
         String outputFile = "E:\\tmp\\docx\\" + System.currentTimeMillis() + ".pdf";
         try {
-            InputStream templateInputStream = new FileInputStream(inputFile);
-            WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(templateInputStream);
-            //MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
-
-            FileOutputStream os = new FileOutputStream(outputFile);
-            Docx4J.toPDF(wordMLPackage,os);
-            os.flush();
-            os.close();
+//            InputStream templateInputStream = new FileInputStream(inputFile);
+//            WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(templateInputStream);
+//            //MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
+//
+//            FileOutputStream os = new FileOutputStream(outputFile);
+//            Docx4J.toPDF(wordMLPackage,os);
+//            os.flush();
+//            os.close();
 
 
 //            Converter converter = new Converter(inputFile);
