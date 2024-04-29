@@ -9,7 +9,8 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class EasyExcelReadModel {
 
+    private String name;
+
     private String certNo;
 
-    private String name;
 }

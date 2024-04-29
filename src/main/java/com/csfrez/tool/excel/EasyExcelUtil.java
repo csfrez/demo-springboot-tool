@@ -45,18 +45,20 @@ public class EasyExcelUtil {
             EasyExcelWriteModel writeModel = new EasyExcelWriteModel();
             String md5_32 = SecureUtil.md5(readModel.getCertNo());
             String md5_16 = SecureUtil.md5().digestHex16(readModel.getCertNo());
+            String sha256 = SecureUtil.sha256(readModel.getCertNo());
             String name = readModel.getName().substring(0, 1);
             writeModel.setName(name);
             writeModel.setMd5_16(md5_16);
             writeModel.setMd5_32(md5_32);
+            writeModel.setSha256(sha256);
             writeModelList.add(writeModel);
         });
         excelWriter.write(writeModelList, EasyExcel.writerSheet("Sheet1").head(EasyExcelWriteModel.class).build());
     }
 
     public static void main(String[] args) {
-        String pathName = "E:\\tmp\\excel\\测试客户名单.xlsx";
-        ExcelWriter excelWriter = EasyExcel.write(new File("E:\\tmp\\excel\\测试客户名单_md5.xlsx"), EasyExcelWriteModel.class).build();
+        String pathName = "E:\\tmp\\excel\\测试样本.xlsx";
+        ExcelWriter excelWriter = EasyExcel.write(new File("E:\\tmp\\excel\\测试样本_240428.xlsx"), EasyExcelWriteModel.class).build();
         EasyExcelListener easyExcelListener = new EasyExcelListener(EasyExcelUtil::consumerData, excelWriter);
         EasyExcelUtil.simpleRead(pathName, EasyExcelReadModel.class, easyExcelListener);
         //数据写入完毕关闭资源
