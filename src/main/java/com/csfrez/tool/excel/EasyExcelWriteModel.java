@@ -14,4 +14,6 @@ public class EasyExcelWriteModel {
     private String md5_16;
 
     private String md5_32;
+
+    private String sha256;
 }
