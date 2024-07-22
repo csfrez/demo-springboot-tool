@@ -33,7 +33,7 @@ public class CustomThreadPoolExecutor extends ThreadPoolExecutor {
 
     @Override
     public <T> Future<T> submit(Callable<T> callable) {
-        Map<String, String> context = MDC.getCopyOfContextMap();
+        final Map<String, String> context = MDC.getCopyOfContextMap();
         return super.submit(wrap(callable, context));
     }
 
