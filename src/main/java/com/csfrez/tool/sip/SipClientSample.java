@@ -84,7 +84,7 @@ public class SipClientSample implements SipListener {
         SipURI contactURI = addressFactory.createSipURI(fromUser, sipProvider.getListeningPoint(transport).getIPAddress());
         contactURI.setPort(sipProvider.getListeningPoint(transport).getPort());
         Address contactAddress = addressFactory.createAddress(contactURI);
-        contactAddress.setDisplayName(displayName);
+        contactAddress.setDisplayName("");
         ContactHeader contactHeader = headerFactory.createContactHeader(contactAddress);
         request.addHeader(contactHeader);
 
@@ -139,6 +139,8 @@ public class SipClientSample implements SipListener {
             // 配置信息
             String ip = "10.96.2.190";
             int port = 5061;
+//            String ip = "47.122.44.140";
+//            int port = 61066;
 
             // 创建SIP客户端
             SipClientSample client = new SipClientSample(ip, port);
@@ -147,16 +149,18 @@ public class SipClientSample implements SipListener {
             String fromUser = "jack";
             String fromHost = "10.96.2.190:5061";
             String fromTag = "123456";
-            String toUser = "jack";
+            String fromDisplayName = "Jack";
+            String toUser = "alice";
             String toHost = "10.96.2.190:5060";
+//            String toHost = "47.122.44.140:61066";
             String toTag = "654321";
-            String displayName = "Alice";
+            String toDisplayName = "Alice";
             int maxForwards = 70;
             String branchId = null; // 自动生成
             long cSeq = 1L;
 
             // 发送注册请求
-            client.sendRegister(fromUser, fromHost, fromTag, toUser, toHost, toTag, displayName, maxForwards, branchId, cSeq);
+            //client.sendRegister(fromUser, fromHost, fromTag, fromDisplayName, toUser, toHost, toTag, toDisplayName, maxForwards, branchId, cSeq);
         } catch (Exception e) {
             e.printStackTrace();
         }
