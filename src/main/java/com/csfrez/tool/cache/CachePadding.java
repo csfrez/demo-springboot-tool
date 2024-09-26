@@ -1,9 +1,9 @@
 package com.csfrez.tool.cache;
 
 /**
- * @author yangzhi
+ * @author csfrez
  * @date 2024/7/17 11:45
- * @email yangzhi@ddjf.com.cn
+ * @email csfrez@163.com
  */
 public class CachePadding {
 

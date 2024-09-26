@@ -1,9 +1,9 @@
 package com.csfrez.tool.test;
 
 /**
- * @author yangzhi
+ * @author csfrez
  * @date 2024/7/17 14:07
- * @email yangzhi@ddjf.com.cn
+ * @email csfrez@163.com
  */
 public class IntegerTest {
     public static void main(String[] args) {

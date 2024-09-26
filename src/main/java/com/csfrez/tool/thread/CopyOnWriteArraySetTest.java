@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
- * @author yangzhi
+ * @author csfrez
  * @date 2024/7/17 14:50
- * @email yangzhi@ddjf.com.cn
+ * @email csfrez@163.com
  */
 public class CopyOnWriteArraySetTest {
 

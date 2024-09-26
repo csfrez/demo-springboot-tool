@@ -7,9 +7,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * @author yangzhi
+ * @author csfrez
  * @date 2024/7/17 14:41
- * @email yangzhi@ddjf.com.cn
+ * @email csfrez@163.com
  */
 public class ThreadSafeSet {
 

@@ -4,9 +4,9 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ZipUtil;
 
 /**
- * @author yangzhi
+ * @author csfrez
  * @date 2024/7/17 14:57
- * @email yangzhi@ddjf.com.cn
+ * @email csfrez@163.com
  */
 public class ZipUtilTest {
 
