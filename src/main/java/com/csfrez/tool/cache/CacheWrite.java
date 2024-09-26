@@ -1,9 +1,9 @@
 package com.csfrez.tool.cache;
 
 /**
- * @author yangzhi
+ * @author csfrez
  * @date 2024/7/17 10:52
- * @email yangzhi@ddjf.com.cn
+ * @email csfrez@163.com
  */
 public class CacheWrite {
 
