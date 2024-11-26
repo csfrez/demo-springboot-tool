@@ -1,8 +1,8 @@
 package com.csfrez.tool.pool;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.MDC;
 
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.concurrent.*;
 
